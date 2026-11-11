@@ -1,0 +1,18 @@
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+
+# Python tooling
+.venv/
+__pycache__/
+*.pyc
+
+# Local scratch output (generated exporter config, downloads)
+.work/
+
+# MkDocs build output
+site/
+
+# OS files
+.DS_Store

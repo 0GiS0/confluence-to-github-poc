@@ -1,0 +1,47 @@
+site_name: Engineering Handbook (Confluence PoC)
+site_description: Confluence Cloud content exported to Markdown, served as a Backstage TechDocs-compatible site.
+
+# The exported tree lives under docs/confluence; attachments are referenced
+# relatively from it, so the export root is the docs root.
+docs_dir: docs/confluence
+site_dir: site
+
+nav:
+  - Home: "Confluence Migration PoC/Engineering Handbook/README.md"
+  - Platform Operations:
+      - "Confluence Migration PoC/Engineering Handbook/Platform Operations/README.md"
+      - Deployment Guide:
+          - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Deployment Guide/README.md"
+          - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Deployment Guide/Rollback Procedure.md"
+      - Incident Response:
+          - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Incident Response/README.md"
+          - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Incident Response/Severity Levels.md"
+          - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Incident Response/Postmortem Template.md"
+      - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Network Topology.md"
+      - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Metrics and Observability.md"
+  - Development Practices:
+      - "Confluence Migration PoC/Engineering Handbook/Development Practices/README.md"
+      - Coding Standards:
+          - "Confluence Migration PoC/Engineering Handbook/Development Practices/Coding Standards/README.md"
+          - "Confluence Migration PoC/Engineering Handbook/Development Practices/Coding Standards/Python Style.md"
+          - "Confluence Migration PoC/Engineering Handbook/Development Practices/Coding Standards/Git Workflow.md"
+      - "Confluence Migration PoC/Engineering Handbook/Development Practices/Code Review Checklist.md"
+  - Security & Compliance:
+      - "Confluence Migration PoC/Engineering Handbook/Security & Compliance/README.md"
+      - "Confluence Migration PoC/Engineering Handbook/Security & Compliance/Access Control Policy.md"
+      - "Confluence Migration PoC/Engineering Handbook/Security & Compliance/Secrets Management.md"
+  - Onboarding:
+      - "Confluence Migration PoC/Engineering Handbook/Onboarding/README.md"
+      - "Confluence Migration PoC/Engineering Handbook/Onboarding/Dev Environment Setup.md"
+      - "Confluence Migration PoC/Engineering Handbook/Onboarding/First Week Checklist.md"
+      - "Confluence Migration PoC/Engineering Handbook/Onboarding/Team Glossary.md"
+
+plugins:
+  - search
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - toc:
+      permalink: false

@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: engineering-handbook-confluence-poc
+  description: Engineering Handbook migrated from Confluence Cloud to Markdown (PoC).
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - documentation
+    - techdocs
+    - confluence-migration
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: user:0GiS0

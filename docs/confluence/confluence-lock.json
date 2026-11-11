@@ -1,0 +1,149 @@
+{
+  "lockfile_version": 2,
+  "last_export": "2026-11-11T12:27:14.119771+00:00",
+  "orgs": {
+    "https://returngis.atlassian.net": {
+      "spaces": {
+        "POC": {
+          "pages": {
+            "1015809": {
+              "title": "Coding Standards",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Development Practices/Coding Standards/README.md",
+              "attachments": {}
+            },
+            "1114113": {
+              "title": "Security & Compliance",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Security & Compliance/README.md",
+              "attachments": {}
+            },
+            "1146881": {
+              "title": "Access Control Policy",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Security & Compliance/Access Control Policy.md",
+              "attachments": {}
+            },
+            "1212417": {
+              "title": "Onboarding",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Onboarding/README.md",
+              "attachments": {}
+            },
+            "229609": {
+              "title": "Development Practices",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Development Practices/README.md",
+              "attachments": {}
+            },
+            "360450": {
+              "title": "Rollback Procedure",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Platform Operations/Deployment Guide/Rollback Procedure.md",
+              "attachments": {}
+            },
+            "491522": {
+              "title": "Engineering Handbook",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/README.md",
+              "attachments": {}
+            },
+            "557057": {
+              "title": "Platform Operations",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Platform Operations/README.md",
+              "attachments": {}
+            },
+            "557074": {
+              "title": "Incident Response",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Platform Operations/Incident Response/README.md",
+              "attachments": {}
+            },
+            "589832": {
+              "title": "Secrets Management",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Security & Compliance/Secrets Management.md",
+              "attachments": {}
+            },
+            "622593": {
+              "title": "Deployment Guide",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Platform Operations/Deployment Guide/README.md",
+              "attachments": {}
+            },
+            "622612": {
+              "title": "Team Glossary",
+              "version": 1,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Onboarding/Team Glossary.md",
+              "attachments": {}
+            },
+            "655364": {
+              "title": "Git Workflow",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Development Practices/Coding Standards/Git Workflow.md",
+              "attachments": {}
+            },
+            "65670": {
+              "title": "Dev Environment Setup",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Onboarding/Dev Environment Setup.md",
+              "attachments": {}
+            },
+            "65687": {
+              "title": "Metrics and Observability",
+              "version": 2,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Platform Operations/Metrics and Observability.md",
+              "attachments": {}
+            },
+            "688129": {
+              "title": "Severity Levels",
+              "version": 1,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Platform Operations/Incident Response/Severity Levels.md",
+              "attachments": {}
+            },
+            "688145": {
+              "title": "Code Review Checklist",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Development Practices/Code Review Checklist.md",
+              "attachments": {}
+            },
+            "753665": {
+              "title": "Postmortem Template",
+              "version": 1,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Platform Operations/Incident Response/Postmortem Template.md",
+              "attachments": {}
+            },
+            "819201": {
+              "title": "Network Topology",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Platform Operations/Network Topology.md",
+              "attachments": {
+                "att884737": {
+                  "version": 5,
+                  "path": "attachments/f4c58d3e-0dc2-4db3-8cbd-d6a4757b82f8.pdf"
+                },
+                "att851969": {
+                  "version": 5,
+                  "path": "attachments/5ed32621-3786-49b2-b5f1-456d3a79fad7.png"
+                }
+              }
+            },
+            "884746": {
+              "title": "First Week Checklist",
+              "version": 4,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Onboarding/First Week Checklist.md",
+              "attachments": {}
+            },
+            "98313": {
+              "title": "Python Style",
+              "version": 5,
+              "export_path": "Confluence Migration PoC/Engineering Handbook/Development Practices/Coding Standards/Python Style.md",
+              "attachments": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}
