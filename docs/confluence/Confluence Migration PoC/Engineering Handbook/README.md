@@ -22,7 +22,7 @@ tags:
     - [Severity Levels](Platform%20Operations/Incident%20Response/Severity%20Levels.md)
     - [Postmortem Template](Platform%20Operations/Incident%20Response/Postmortem%20Template.md)
   - [Network Topology](Platform%20Operations/Network%20Topology.md)
-  - [Métricas y Observabilidad](Platform%20Operations/Métricas%20y%20Observabilidad.md)
+  - [Metrics and Observability](Platform%20Operations/Metrics%20and%20Observability.md)
 - [Development Practices](Development%20Practices/README.md)
   - [Coding Standards](Development%20Practices/Coding%20Standards/README.md)
     - [Python Style](Development%20Practices/Coding%20Standards/Python%20Style.md)

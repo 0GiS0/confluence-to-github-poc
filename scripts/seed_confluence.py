@@ -138,8 +138,8 @@ PAGES = [
         + "<ac:plain-text-link-body><![CDATA[PDF diagram]]></ac:plain-text-link-body></ac:link></p>"
         + "<h2>Services</h2>" + TABLE_SERVICES
     )},
-    {"title": "Métricas y Observabilidad", "parent": "Platform Operations", "labels": ["observability"], "body": (
-        "<p>Las métricas clave son latencia p95, tasa de errores y saturación.</p>"
+    {"title": "Metrics and Observability", "parent": "Platform Operations", "labels": ["observability"], "body": (
+        "<p>The key metrics are p95 latency, error rate, and saturation.</p>"
         + '<ac:structured-macro ac:name="details"><ac:rich-text-body>'
         + "<table><tbody><tr><th>Owner</th><td>Team Observability</td></tr>"
         + "<tr><th>Review cadence</th><td>Monthly</td></tr></tbody></table></ac:rich-text-body></ac:structured-macro>"

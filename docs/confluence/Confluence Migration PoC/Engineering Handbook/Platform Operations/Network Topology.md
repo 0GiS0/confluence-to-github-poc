@@ -10,9 +10,9 @@ tags:
 
 Current topology of the payments and catalog services.
 
-![](../../../attachments/d76a5c03-0998-4c73-9f62-e691d083b959.png)
+![](../../../attachments/5ed32621-3786-49b2-b5f1-456d3a79fad7.png)
 
-Full diagram export: [network-topology.pdf](../../../attachments/74dbb146-3f08-417d-bb85-f615b2360117.pdf)
+Full diagram export: [network-topology.pdf](../../../attachments/f4c58d3e-0dc2-4db3-8cbd-d6a4757b82f8.pdf)
 
 ## Services
 

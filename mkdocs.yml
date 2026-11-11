@@ -18,7 +18,7 @@ nav:
           - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Incident Response/Severity Levels.md"
           - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Incident Response/Postmortem Template.md"
       - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Network Topology.md"
-      - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Métricas y Observabilidad.md"
+      - "Confluence Migration PoC/Engineering Handbook/Platform Operations/Metrics and Observability.md"
   - Development Practices:
       - "Confluence Migration PoC/Engineering Handbook/Development Practices/README.md"
       - Coding Standards:

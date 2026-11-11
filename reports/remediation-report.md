@@ -17,7 +17,7 @@ Scope: a synthetic technical handbook (21 pages) seeded into Confluence Cloud Fr
 | ID | Severity | Page | Problem | Remediation steps |
 |---|---|---|---|---|
 | L1 | High | First Week Checklist | `include` macro is replaced by "Error rendering macro 'include'...". The embedded content is missing. | 1. Open the source page that `include` points to. 2. Paste its content into this page, or link to it. 3. Remove the error text. |
-| L2 | High | Métricas y Observabilidad | Unknown macro `acme-status-widget` is replaced by an external placeholder image. | 1. Identify what the widget displayed. 2. Replace the placeholder image with the real content (a table, a link, or a live dashboard link). 3. If the widget is used in many pages, add a converter handler or a custom macro mapping. |
+| L2 | High | Metrics and Observability | Unknown macro `acme-status-widget` is replaced by an external placeholder image. | 1. Identify what the widget displayed. 2. Replace the placeholder image with the real content (a table, a link, or a live dashboard link). 3. If the widget is used in many pages, add a converter handler or a custom macro mapping. |
 | D1 | Medium | Engineering Handbook; Deployment Guide | Five TOC links use Confluence heading anchors that MkDocs does not generate. | 1. Update each link to the MkDocs heading id, or 2. remove the static TOC and rely on the navigation sidebar. |
 | D2 | Low | Deployment Guide | The `post-deploy` anchor macro is dropped, so links to it are dead. | Add an explicit id (for example `{ #post-deploy }`) to the matching heading. |
 | A1 | Low | Network Topology | Attachments keep ID-based file names (for example `d76a5c03-...png`). | Optional: rename the files and update their references. |

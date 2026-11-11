@@ -7,9 +7,9 @@ tags:
 
 [Engineering Handbook](../README.md) > [Platform Operations](README.md)
 
-# Métricas y Observabilidad
+# Metrics and Observability
 
-Las métricas clave son latencia p95, tasa de errores y saturación.
+The key metrics are p95 latency, error rate, and saturation.
 
 |                |                    |
 |:---------------|:-------------------|

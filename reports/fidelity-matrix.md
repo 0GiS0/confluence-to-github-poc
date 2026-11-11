@@ -22,14 +22,14 @@ Status legend:
 | 8 | Info / Warning / Note panels (`info`, `warning`, `note`) | Several | `> [!IMPORTANT]` / `> [!CAUTION]` callouts | Preserved | Renders as an admonition in MkDocs; GitHub renders it as an alert. |
 | 9 | Expand macro (`expand`, "On-call contacts") | Incident Response | `<details>` / `<summary>` | Preserved | Raw HTML; renders in both GitHub and MkDocs. |
 | 10 | Status lozenge (`status`, coloured) | Several | `<mark style="background: ...">` text | Preserved | Colour kept as inline style; not a semantic badge. |
-| 11 | Details / page properties (`details`) | Métricas y Observabilidad | YAML frontmatter plus a table | Preserved | |
+| 11 | Details / page properties (`details`) | Metrics and Observability | YAML frontmatter plus a table | Preserved | |
 | 12 | Attachments (PNG image, PDF) | Network Topology | `docs/confluence/attachments/<id>.<ext>`, referenced relatively | Preserved | Both files exported. Filenames are IDs, so the original names are lost. |
 | 13 | Internal page links (`ri:page`) | Breadcrumbs, cross-page links | Relative `.md` links | Preserved | 86 links checked (relative and in-page anchors), 0 broken files; 5 unresolved in-page anchors reported as warnings (`scripts/validate_export.py`). |
 | 14 | Breadcrumb / navigation link to parent | Child pages | `../README.md`-style links | Preserved | |
 | 15 | Table of contents macro (`toc`, `children`) | Engineering Handbook, Deployment Guide | Static list of Confluence-style `#<page>-<heading>` anchors | Degraded | The anchors do not exist in MkDocs output. See finding D1. |
 | 16 | Anchor macro (`anchor`, "post-deploy") | Deployment Guide | Removed (no output) | Degraded | The named anchor is not carried over, so the link to `#post-deploy` has no target. Replace with an explicit heading id if needed. |
 | 17 | `include` macro (embedded page) | First Week Checklist | Literal text: "Error rendering macro 'include' : ... No title provided." | Lost | The included content is absent. See finding L1. |
-| 18 | Unknown / unsupported macro (`acme-status-widget`) | Métricas y Observabilidad | External placeholder image URL | Lost | No content is kept. See finding L2. |
+| 18 | Unknown / unsupported macro (`acme-status-widget`) | Metrics and Observability | External placeholder image URL | Lost | No content is kept. See finding L2. |
 | 19 | Page comments | None seeded | Not exported (`comments_export` = `none`) | Lost (by design) | Out of scope for this PoC. |
 | 20 | Marketplace macros (draw.io, Gliffy) | Not seeded | n/a | Not tested | Free plan has no Marketplace apps. |
 | 21 | Page restrictions / permissions | n/a | n/a | Not applicable | Out of scope. |
