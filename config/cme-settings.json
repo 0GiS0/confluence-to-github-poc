@@ -1,0 +1,22 @@
+{
+  "export": {
+    "log_level": "INFO",
+    "output_path": "docs/confluence",
+    "page_path": "{space_name}/{ancestor_titles}/{page_title}.md",
+    "page_path_if_parent": "{space_name}/{ancestor_titles}/{page_title}/README.md",
+    "page_href": "relative",
+    "attachments_export": "all",
+    "attachment_path": "attachments/{attachment_file_id}{attachment_extension}",
+    "attachment_path_if_parent": null,
+    "attachment_href": "relative",
+    "include_toc": true,
+    "include_macro": "inline",
+    "comments_export": "none",
+    "skip_unchanged": false,
+    "cleanup_stale": true
+  },
+  "connection_config": {
+    "max_workers": 4,
+    "timeout": 60
+  }
+}
