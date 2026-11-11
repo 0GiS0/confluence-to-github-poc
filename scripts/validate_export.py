@@ -11,6 +11,7 @@ Exit code is 0 when no check fails; warnings are reported but do not fail the ru
 
 import re
 import sys
+import unicodedata
 import urllib.parse
 from pathlib import Path
 
@@ -61,8 +62,10 @@ def heading_slugs(text: str) -> set[str]:
     """Approximate MkDocs/Python-Markdown heading anchor slugs for a page."""
     slugs = set()
     for heading in HEADING_PATTERN.findall(text):
-        slug = re.sub(r"[^\w\- ]", "", heading.strip().lower()).replace(" ", "-")
-        slugs.add(slug)
+        # Same steps as Python-Markdown's default slugify (used by MkDocs toc).
+        folded = unicodedata.normalize("NFKD", heading).encode("ascii", "ignore").decode()
+        slug = re.sub(r"[^\w\s-]", "", folded).strip().lower()
+        slugs.add(re.sub(r"[-\s]+", "-", slug))
     return slugs
 
 
@@ -79,7 +82,7 @@ def check_links() -> tuple[list[str], list[str], int]:
                 continue
             checked += 1
             if target.startswith("#"):
-                if target[1:] not in slugs:
+                if urllib.parse.unquote(target[1:]) not in slugs:
                     anchor_warnings.append(f"{md_file.relative_to(REPO_ROOT)} -> {target}")
                 continue
             path_part = urllib.parse.unquote(target.split("#", 1)[0])

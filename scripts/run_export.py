@@ -46,8 +46,9 @@ def write_private_config(settings: dict) -> None:
     WORK_DIR.mkdir(exist_ok=True)
     fd = os.open(CME_CONFIG, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        # Tighten a pre-existing file before any credential is written.
+        os.fchmod(handle.fileno(), 0o600)
         json.dump(config, handle, indent=2)
-    os.chmod(CME_CONFIG, 0o600)
 
 
 def main() -> int:

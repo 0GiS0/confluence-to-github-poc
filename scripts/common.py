@@ -5,6 +5,7 @@ take precedence over that file. Secret values are never printed or logged.
 """
 
 import base64
+import http.client
 import json
 import os
 import urllib.error
@@ -71,9 +72,12 @@ class ConfluenceClient:
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")[:500]
             raise ConfluenceError(f"{method} {path} failed with HTTP {exc.code}: {detail}") from exc
-        except (urllib.error.URLError, TimeoutError) as exc:
+        except (OSError, http.client.HTTPException) as exc:
             raise ConfluenceError(f"{method} {path} failed: {exc}") from exc
-        return json.loads(raw) if raw else None
+        try:
+            return json.loads(raw) if raw else None
+        except ValueError as exc:
+            raise ConfluenceError(f"{method} {path} returned invalid JSON: {exc}") from exc
 
     def get_all(self, path: str, params: dict | None = None, page_size: int = 50) -> list:
         """Follow start/limit pagination for list endpoints."""
