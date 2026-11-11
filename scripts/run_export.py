@@ -47,6 +47,7 @@ def write_private_config(settings: dict) -> None:
     fd = os.open(CME_CONFIG, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     with os.fdopen(fd, "w", encoding="utf-8") as handle:
         json.dump(config, handle, indent=2)
+    os.chmod(CME_CONFIG, 0o600)
 
 
 def main() -> int:

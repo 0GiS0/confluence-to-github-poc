@@ -25,7 +25,7 @@ Reproducible PoC that migrates technical Confluence content to Markdown in GitHu
 
 ```bash
 python3 -m venv .venv && .venv/bin/python -m pip install -r requirements.txt
-cp .env.example ~/.config/confluence-poc/.env   # then fill in the values
+mkdir -p ~/.config/confluence-poc && cp .env.example ~/.config/confluence-poc/.env   # then fill in the values
 .venv/bin/python scripts/seed_confluence.py
 .venv/bin/python scripts/run_export.py
 .venv/bin/python scripts/validate_export.py

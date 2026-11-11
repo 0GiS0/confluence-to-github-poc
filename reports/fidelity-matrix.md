@@ -24,7 +24,7 @@ Status legend:
 | 10 | Status lozenge (`status`, coloured) | Several | `<mark style="background: ...">` text | Preserved | Colour kept as inline style; not a semantic badge. |
 | 11 | Details / page properties (`details`) | Métricas y Observabilidad | YAML frontmatter plus a table | Preserved | |
 | 12 | Attachments (PNG image, PDF) | Network Topology | `docs/confluence/attachments/<id>.<ext>`, referenced relatively | Preserved | Both files exported. Filenames are IDs, so the original names are lost. |
-| 13 | Internal page links (`ri:page`) | Breadcrumbs, cross-page links | Relative `.md` links | Preserved | 81 relative links checked, 0 broken (`scripts/validate_export.py`). |
+| 13 | Internal page links (`ri:page`) | Breadcrumbs, cross-page links | Relative `.md` links | Preserved | 86 links checked (relative and in-page anchors), 0 broken files; 5 unresolved in-page anchors reported as warnings (`scripts/validate_export.py`). |
 | 14 | Breadcrumb / navigation link to parent | Child pages | `../README.md`-style links | Preserved | |
 | 15 | Table of contents macro (`toc`, `children`) | Engineering Handbook, Deployment Guide | Static list of Confluence-style `#<page>-<heading>` anchors | Degraded | The anchors do not exist in MkDocs output. See finding D1. |
 | 16 | Anchor macro (`anchor`, "post-deploy") | Deployment Guide | Removed (no output) | Degraded | The named anchor is not carried over, so the link to `#post-deploy` has no target. Replace with an explicit heading id if needed. |

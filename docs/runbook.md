@@ -59,7 +59,7 @@ The seed deliberately uses only built-in macros, plus one unknown macro (`acme-s
 - Resolves the root page through the REST API and writes the merged converter config to `.work/cme-config.json` (mode 600, gitignored).
 - Runs `cme pages-with-descendants` with `config/cme-settings.json`.
 - Output: `docs/confluence/Confluence Migration PoC/Engineering Handbook/...` and `docs/confluence/attachments/`.
-- Log: `.work/export.log`.
+- Output: printed to stdout (the `cme` log is not written to a file).
 
 Expected result: 21/21 pages, 2/2 attachments, exit 0.
 
@@ -69,7 +69,7 @@ Expected result: 21/21 pages, 2/2 attachments, exit 0.
 .venv/bin/python scripts/validate_export.py
 ```
 
-Checks that the exported page tree matches Confluence, that every relative link resolves (81 links), that attachments are on disk, and it lists the macro placeholders. Exits 1 on failure.
+Checks that the exported page tree matches Confluence, that every relative link resolves (86 links checked; in-page anchors are reported as warnings), that attachments are on disk, and it lists the macro placeholders. Exits 1 on failure.
 
 ## 7. Build and preview the MkDocs site
 

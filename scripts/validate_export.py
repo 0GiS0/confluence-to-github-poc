@@ -22,15 +22,19 @@ LINK_PATTERN = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MACRO_ERROR_PATTERN = re.compile(r"Error rendering macro '([^']+)'")
 UNKNOWN_MACRO_PATTERN = re.compile(r"unknown-macro\?name=([^&)\s]+)")
 STORAGE_MARKUP_PATTERN = re.compile(r"<ac:|<ri:")
+HEADING_PATTERN = re.compile(r"^#{1,6}\s+(.+?)\s*#*\s*$", re.MULTILINE)
 ROOT_PAGE_TITLE = "Engineering Handbook"
 
 
 def fetch_exported_tree_pages(settings: dict) -> dict:
     """Return {title: page_id} for the root page and all of its descendants (the exported tree)."""
     client = ConfluenceClient.from_settings(settings)
-    root = client.request("GET", "/content", params={
+    results = client.request("GET", "/content", params={
         "spaceKey": settings["CONFLUENCE_SPACE_KEY"], "title": ROOT_PAGE_TITLE,
-    })["results"][0]
+    })["results"]
+    if not results:
+        raise ConfluenceError(f"root page '{ROOT_PAGE_TITLE}' not found in space")
+    root = results[0]
     descendants = client.get_all(f"/content/{root['id']}/descendant/page")
     pages = [root, *descendants]
     return {page["title"]: page["id"] for page in pages}
@@ -53,21 +57,35 @@ def check_inventory(space_titles: dict) -> list[str]:
     return failures
 
 
-def check_links() -> tuple[list[str], int]:
+def heading_slugs(text: str) -> set[str]:
+    """Approximate MkDocs/Python-Markdown heading anchor slugs for a page."""
+    slugs = set()
+    for heading in HEADING_PATTERN.findall(text):
+        slug = re.sub(r"[^\w\- ]", "", heading.strip().lower()).replace(" ", "-")
+        slugs.add(slug)
+    return slugs
+
+
+def check_links() -> tuple[list[str], list[str], int]:
+    """Return (broken file links, unresolved in-page anchors, number of links checked)."""
     failures = []
+    anchor_warnings = []
     checked = 0
     for md_file in exported_markdown_files():
         text = md_file.read_text(encoding="utf-8")
+        slugs = heading_slugs(text)
         for target in LINK_PATTERN.findall(text):
-            if target.startswith(("http://", "https://", "#", "mailto:")):
+            if target.startswith(("http://", "https://", "mailto:")):
                 continue
             checked += 1
-            path_part = urllib.parse.unquote(target.split("#", 1)[0])
-            if not path_part:
+            if target.startswith("#"):
+                if target[1:] not in slugs:
+                    anchor_warnings.append(f"{md_file.relative_to(REPO_ROOT)} -> {target}")
                 continue
+            path_part = urllib.parse.unquote(target.split("#", 1)[0])
             if not (md_file.parent / path_part).resolve().exists():
                 failures.append(f"{md_file.relative_to(REPO_ROOT)} -> {target}")
-    return failures, checked
+    return failures, anchor_warnings, checked
 
 
 def check_macro_artefacts() -> tuple[dict, list[str], int]:
@@ -108,7 +126,7 @@ def main() -> int:
 
     failures = []
     failures += check_inventory(space_titles)
-    link_failures, links_checked = check_links()
+    link_failures, anchor_warnings, links_checked = check_links()
     failures += link_failures
     degraded, unknown_names, leftover = check_macro_artefacts()
     if leftover:
@@ -117,7 +135,10 @@ def main() -> int:
     failures += attachment_failures
 
     print(f"Pages in exported tree: {len(space_titles)}; Markdown files: {len(exported_markdown_files())}")
-    print(f"Relative links checked: {links_checked}; broken: {len(link_failures)}")
+    print(f"Links checked (incl. in-page anchors): {links_checked}; broken files: {len(link_failures)}")
+    print(f"Unresolved in-page anchors (warnings): {len(anchor_warnings)}")
+    for warning in anchor_warnings:
+        print(f"WARN: unresolved anchor {warning}")
     print(f"Attachments on disk: {attachment_count}")
     print(f"Macro error placeholders: {degraded or 'none'}")
     print(f"Unknown macro placeholders: {unknown_names or 'none'}")

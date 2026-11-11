@@ -9,7 +9,7 @@ Scope: a synthetic technical handbook (21 pages) seeded into Confluence Cloud Fr
 |---|---|---|
 | Seed (idempotent) | `.venv/bin/python scripts/seed_confluence.py` | 21 pages in the tree; a re-run creates no duplicates |
 | Export | `.venv/bin/python scripts/run_export.py` | 21/21 pages exported, 2/2 attachments, exit 0 |
-| Validation | `.venv/bin/python scripts/validate_export.py` | PASS: 21 pages in tree and on disk; 81 relative links, 0 broken; 2 attachments on disk |
+| Validation | `.venv/bin/python scripts/validate_export.py` | PASS: 21 pages in tree and on disk; 86 links checked, 0 broken files; 5 unresolved in-page anchors (warnings, see D1); 2 attachments on disk |
 | MkDocs strict build | `.venv/bin/mkdocs build --strict` | Exit 0. 5 INFO "no such anchor" notes (see D1) |
 
 ## Items requiring manual remediation
