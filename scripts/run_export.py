@@ -17,17 +17,16 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 SETTINGS_FILE = REPO_ROOT / "config" / "cme-settings.json"
 WORK_DIR = REPO_ROOT / ".work"
 CME_CONFIG = WORK_DIR / "cme-config.json"
-ROOT_PAGE_TITLE = "Engineering Handbook"
 
 
-def find_root_page_id(client: ConfluenceClient, space_key: str) -> str:
-    """Return the id of the root page of the seeded tree."""
+def find_root_page_id(client: ConfluenceClient, space_key: str, root_title: str) -> str:
+    """Return the id of the root page of the exported tree."""
     result = client.request("GET", "/content", params={
-        "spaceKey": space_key, "title": ROOT_PAGE_TITLE, "expand": "space",
+        "spaceKey": space_key, "title": root_title, "expand": "space",
     })
     results = result.get("results", [])
     if not results:
-        raise SystemExit(f"Root page '{ROOT_PAGE_TITLE}' not found in space {space_key}. Run seed_confluence.py first.")
+        raise SystemExit(f"Root page '{root_title}' not found in space {space_key}. Check CONFLUENCE_ROOT_PAGE_TITLE.")
     return results[0]["id"]
 
 
@@ -55,7 +54,7 @@ def main() -> int:
     settings = load_settings()
     client = ConfluenceClient.from_settings(settings)
     try:
-        page_id = find_root_page_id(client, settings["CONFLUENCE_SPACE_KEY"])
+        page_id = find_root_page_id(client, settings["CONFLUENCE_SPACE_KEY"], settings["CONFLUENCE_ROOT_PAGE_TITLE"])
     except ConfluenceError as error:
         print(f"Export failed: {error}", file=sys.stderr)
         return 1
