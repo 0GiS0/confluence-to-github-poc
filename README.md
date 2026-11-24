@@ -55,8 +55,8 @@ python3 -m venv .venv
 .venv/bin/mkdocs serve -a 127.0.0.1:8000         # 5. preview the site
 ```
 
-- **Clear the sample export first on a new site.** The repository contains an export from the original site. Before step 2, delete the contents of `docs/confluence/` (or work in a fresh clone). Otherwise its files remain and validation reports them as unreferenced.
-- **Preview URL.** Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/. The site has no root page, so use this path or the **Home** entry in the sidebar.
+- **Clear the sample export first on a new site.** The repository contains an export from the original site, and a fresh clone contains it too. Before step 2, delete the contents of `docs/confluence/`. Otherwise its files remain and validation reports them as unreferenced.
+- **Preview URL.** With the seeded space name, open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/. The site has no root page, so use this path or the **Home** entry in the sidebar. With a different space name, use the exported space folder under `docs/confluence/` in the same URL form.
 
 Step 3 needs Confluence access. Steps 4 and 5 work offline.
 

@@ -56,6 +56,8 @@ The seed deliberately uses only built-in macros, plus one unknown macro (`acme-s
 
 ## 5. Export to Markdown
 
+Before the first export on a new site, delete the sample export: the contents of `docs/confluence/`. The repository (and any clone) contains an export from the original site, and its files would otherwise be reported as unreferenced by validation.
+
 ```bash
 .venv/bin/python scripts/run_export.py
 ```
@@ -98,7 +100,7 @@ Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/ 
 ## 9. Maintenance notes
 
 - `mkdocs.yml` uses an explicit `nav`. Pages that are not listed in `nav` are still built and served, but they do not appear in the sidebar. For your own content, remove the `nav` block so MkDocs generates it.
-- The export is a full re-export (`skip_unchanged` is false). `cleanup_stale` removes files the converter previously exported that the new run does not produce. It does not remove other files in `docs/confluence/`.
+- The export is a full re-export (`skip_unchanged` is false). `cleanup_stale` removes the output of pages that were moved or deleted since a previous export. It does not remove other files in `docs/confluence/`.
 - Remediation items and the fidelity matrix are in `reports/`. They describe the seeded handbook.
 
 ## 10. Troubleshooting
