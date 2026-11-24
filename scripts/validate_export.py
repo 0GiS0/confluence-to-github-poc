@@ -24,17 +24,17 @@ MACRO_ERROR_PATTERN = re.compile(r"Error rendering macro '([^']+)'")
 UNKNOWN_MACRO_PATTERN = re.compile(r"unknown-macro\?name=([^&)\s]+)")
 STORAGE_MARKUP_PATTERN = re.compile(r"<ac:|<ri:")
 HEADING_PATTERN = re.compile(r"^#{1,6}\s+(.+?)\s*#*\s*$", re.MULTILINE)
-ROOT_PAGE_TITLE = "Engineering Handbook"
 
 
 def fetch_exported_tree_pages(settings: dict) -> dict:
     """Return {title: page_id} for the root page and all of its descendants (the exported tree)."""
     client = ConfluenceClient.from_settings(settings)
+    root_title = settings["CONFLUENCE_ROOT_PAGE_TITLE"]
     results = client.request("GET", "/content", params={
-        "spaceKey": settings["CONFLUENCE_SPACE_KEY"], "title": ROOT_PAGE_TITLE,
+        "spaceKey": settings["CONFLUENCE_SPACE_KEY"], "title": root_title,
     })["results"]
     if not results:
-        raise ConfluenceError(f"root page '{ROOT_PAGE_TITLE}' not found in space")
+        raise ConfluenceError(f"root page '{root_title}' not found in space")
     root = results[0]
     descendants = client.get_all(f"/content/{root['id']}/descendant/page")
     pages = [root, *descendants]

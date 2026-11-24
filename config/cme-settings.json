@@ -13,7 +13,8 @@
     "include_macro": "inline",
     "comments_export": "none",
     "skip_unchanged": false,
-    "cleanup_stale": true
+    "cleanup_stale": true,
+    "database_placeholders": false
   },
   "connection_config": {
     "max_workers": 4,

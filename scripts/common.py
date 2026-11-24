@@ -16,10 +16,14 @@ from pathlib import Path
 
 DEFAULT_ENV_FILE = Path.home() / ".config" / "confluence-poc" / ".env"
 REQUIRED_VARS = ("CONFLUENCE_URL", "CONFLUENCE_USER", "CONFLUENCE_API_TOKEN", "CONFLUENCE_SPACE_KEY")
+DEFAULT_ROOT_PAGE_TITLE = "Engineering Handbook"
 
 
 def load_settings(env_file: Path = DEFAULT_ENV_FILE) -> dict:
-    """Return the required settings, merging the env file with the process environment."""
+    """Return the required settings, merging the env file with the process environment.
+
+    CONFLUENCE_ROOT_PAGE_TITLE is optional and defaults to the seeded handbook root.
+    """
     values: dict = {}
     if env_file.exists():
         for raw in env_file.read_text(encoding="utf-8").splitlines():
@@ -27,14 +31,18 @@ def load_settings(env_file: Path = DEFAULT_ENV_FILE) -> dict:
             if not line or line.startswith("#") or "=" not in line:
                 continue
             key, _, value = line.partition("=")
-            values[key.strip()] = value.strip().strip('"').strip("'")
-    for key in REQUIRED_VARS:
+            value = value.strip()
+            if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+                value = value[1:-1]
+            values[key.strip()] = value
+    for key in (*REQUIRED_VARS, "CONFLUENCE_ROOT_PAGE_TITLE"):
         if os.environ.get(key):
             values[key] = os.environ[key]
     missing = [key for key in REQUIRED_VARS if not values.get(key)]
     if missing:
         raise SystemExit(f"Missing settings: {', '.join(missing)} (set them in {env_file} or the environment)")
     values["CONFLUENCE_URL"] = values["CONFLUENCE_URL"].rstrip("/")
+    values["CONFLUENCE_ROOT_PAGE_TITLE"] = values.get("CONFLUENCE_ROOT_PAGE_TITLE") or DEFAULT_ROOT_PAGE_TITLE
     return values
 
 
