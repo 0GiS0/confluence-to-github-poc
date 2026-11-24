@@ -22,8 +22,8 @@ chmod 600 ~/.config/confluence-poc/.env
 
 - `CONFLUENCE_URL` must not include `/wiki`.
 - `CONFLUENCE_ROOT_PAGE_TITLE` names the root page whose descendants are exported and validated. It defaults to the seeded `Engineering Handbook`. See section 11 to use your own content.
-- Never print, log, or commit the token. `.env*` is gitignored.
-- Environment variables with the same names override the file.
+- Never print, log, or commit the token. Git ignores `.env` and `.env.*`, except `.env.example`.
+- Environment variables with the same names override the file, but only when they are non-empty.
 
 ## 3. Create the virtual environment
 
@@ -48,7 +48,7 @@ Pinned versions: `confluence-markdown-exporter==5.6.0` (CLI `cme`), `mkdocs==1.6
 .venv/bin/python scripts/seed_confluence.py
 ```
 
-Creates or updates 21 pages under the "Engineering Handbook" root, with attachments. Re-running is safe: no duplicate pages are created. Because Confluence normalises stored XHTML, most pages receive a new version on every run even when the content is unchanged.
+Creates or updates 21 pages under the "Engineering Handbook" root, with attachments. Run it only in a dedicated test space: it replaces the content of pages whose titles match. Name the space "Confluence Migration PoC", because the `nav` in `mkdocs.yml` expects that display name. Re-running is safe: no duplicate pages are created. Because Confluence normalises stored XHTML, most pages receive a new version on every run even when the content is unchanged.
 
 The seed deliberately uses only built-in macros, plus one unknown macro (`acme-status-widget`) and an `include` macro, to test degradation.
 
@@ -87,7 +87,7 @@ Preview locally on port 8000:
 .venv/bin/mkdocs serve -a 127.0.0.1:8000
 ```
 
-Open http://127.0.0.1:8000/. Expect 5 INFO "no such anchor" notes during the build: these are the known degraded TOC links (see `reports/fidelity-matrix.md`, finding D1). They are informational and do not fail the strict build.
+Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/ (the site has no root page). Expect 5 INFO "no such anchor" notes during the build: these are the known degraded TOC links (see `reports/fidelity-matrix.md`, finding D1). They are informational and do not fail the strict build.
 
 ## 8. Backstage TechDocs
 
@@ -107,17 +107,20 @@ Open http://127.0.0.1:8000/. Expect 5 INFO "no such anchor" notes during the bui
 | Seed returns HTTP 500 on `include` | Empty `ac:name` parameter | Use `ac:name="page"` (already fixed in `seed_confluence.py`) |
 | Export fails on the root page with OSError | Empty ancestor path yields an absolute path | Keep `{space_name}/` at the start of path templates (already set in `config/cme-settings.json`) |
 | `Root page '...' not found` | `CONFLUENCE_ROOT_PAGE_TITLE` does not match a page title in the space, or the seed has not run | Check the exact title, or run `seed_confluence.py` for the seeded handbook |
-| Validation reports a missing or extra page | Space has pages outside the handbook tree | Validation is scoped to the root page's descendants; re-run after the seed |
+| Validation reports a missing or extra page | Space has pages outside the handbook tree, or titles with characters the converter sanitizes | Validation is scoped to the root page's descendants and matches exact filenames; pages outside the tree are not validation errors. Review the output for your content |
 
 ## 11. Using your own Confluence content
 
 1. Set `CONFLUENCE_SPACE_KEY` to your space key and `CONFLUENCE_ROOT_PAGE_TITLE` to the exact title of the root page. Titles must be unique in the space.
 2. Do not run `seed_confluence.py`.
-3. Run `run_export.py` and then `validate_export.py`.
-4. Delete the `nav` block in `mkdocs.yml` (or replace it with your page paths), then run `mkdocs build --strict`.
+3. Delete the existing `docs/confluence/` contents (the sample export) in a disposable clone or branch. Export does not purge files the new tree no longer produces.
+4. Run `run_export.py` and then `validate_export.py`.
+5. Delete the `nav` block in `mkdocs.yml` (or replace it with your page paths), then run `mkdocs build --strict`.
 
 Notes:
 
-- Exporting replaces the contents of `docs/confluence/` (see section 9). Use a branch or a fresh clone.
-- `run_export.py` exports a page tree only. To export a whole space, change the `cme` subcommand in `scripts/run_export.py`.
-- The reports in `reports/` describe the seeded handbook. Regenerate them from your export.
+- Exports write to `docs/confluence/`. `cleanup_stale` removes only files the converter previously exported that the new run does not produce.
+- `run_export.py` exports a single page tree. Whole-space export is not supported by this wrapper. It would need changes to the root lookup, the converter command, and the validator.
+- Links to pages outside the exported tree can become relative links to Markdown files that are not exported. Then validation or the strict build fails. Export those pages too, or repair the links.
+- The validator matches Confluence titles to Markdown filenames exactly. Titles with characters the converter sanitizes can be reported as missing. It also reports attachments that no page links to. Review its output rather than treating it as a full audit.
+- The reports in `reports/` describe the seeded handbook. Write your own findings from the new export.

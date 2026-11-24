@@ -39,7 +39,7 @@ def load_settings(env_file: Path = DEFAULT_ENV_FILE) -> dict:
     if missing:
         raise SystemExit(f"Missing settings: {', '.join(missing)} (set them in {env_file} or the environment)")
     values["CONFLUENCE_URL"] = values["CONFLUENCE_URL"].rstrip("/")
-    values.setdefault("CONFLUENCE_ROOT_PAGE_TITLE", DEFAULT_ROOT_PAGE_TITLE)
+    values["CONFLUENCE_ROOT_PAGE_TITLE"] = values.get("CONFLUENCE_ROOT_PAGE_TITLE") or DEFAULT_ROOT_PAGE_TITLE
     return values
 
 

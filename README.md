@@ -28,7 +28,7 @@ cp .env.example ~/.config/confluence-poc/.env
 chmod 600 ~/.config/confluence-poc/.env
 ```
 
-The scripts read `~/.config/confluence-poc/.env`. Environment variables with the same names override the file. Never commit real values. `.env*` (except `.env.example`) is gitignored.
+The scripts read `~/.config/confluence-poc/.env`. Only non-empty environment variables with the same names override the file. Never commit real values. Git ignores `.env` and `.env.*`; `.env.example` is the only tracked file that matches that pattern.
 
 | Variable | Required | Description |
 |---|---|---|
@@ -40,7 +40,7 @@ The scripts read `~/.config/confluence-poc/.env`. Environment variables with the
 
 ## Quick start
 
-Run these commands from the repository root. On Windows, use `.venv\Scripts\python` instead of `.venv/bin/python`.
+Run these commands from the repository root in a POSIX shell (Linux, macOS, or WSL on Windows).
 
 ```bash
 python3 -m venv .venv
@@ -49,8 +49,12 @@ python3 -m venv .venv
 .venv/bin/python scripts/run_export.py           # 2. export it to docs/confluence/
 .venv/bin/python scripts/validate_export.py      # 3. check the export against Confluence
 .venv/bin/mkdocs build --strict                  # 4. build the MkDocs site into site/
-.venv/bin/mkdocs serve -a 127.0.0.1:8000         # 5. preview at http://127.0.0.1:8000/
+.venv/bin/mkdocs serve -a 127.0.0.1:8000         # 5. preview the site
 ```
+
+- **Seed only a dedicated test space.** `seed_confluence.py` creates pages and replaces the content of pages with the same titles. Do not run it in a space that holds real content.
+- **Name the space "Confluence Migration PoC".** The export writes under the space's display name, and the `nav` in `mkdocs.yml` expects that name. Use a different name only after you remove `nav` (see below).
+- **Preview URL.** Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/. The site has no root page, so use this path or the **Home** entry in the sidebar.
 
 Step 3 needs Confluence access. Steps 4 and 5 work offline.
 
@@ -68,14 +72,17 @@ The scripts export one page tree: a root page and all of its descendants. To use
 
 1. **Set the variables.** Set `CONFLUENCE_SPACE_KEY` to your space key and `CONFLUENCE_ROOT_PAGE_TITLE` to the exact title of the root page. Page titles must be unique within the space.
 2. **Skip the seed.** Do not run `seed_confluence.py`. It creates the synthetic handbook.
-3. **Export and validate.** Run `run_export.py` and then `validate_export.py`. The validator checks the same root page and its descendants.
-4. **Update the site navigation.** `mkdocs.yml` has an explicit `nav:` that lists the synthetic pages. Delete the `nav:` block so MkDocs generates navigation from the files, or replace it with your own page paths. Then run `mkdocs build --strict`.
+3. **Clear the sample export.** The repository includes an export of the seeded handbook. Run the new export in a disposable clone or a branch. Export does not purge files that the new tree no longer produces, so delete the existing `docs/confluence/` contents first.
+4. **Export and validate.** Run `run_export.py` and then `validate_export.py`.
+5. **Update the site navigation.** `mkdocs.yml` has an explicit `nav:` that lists the synthetic pages. Delete the `nav:` block so MkDocs generates navigation from the files, or replace it with your own page paths. Then run `mkdocs build --strict`.
 
 Things to know before you run it:
 
-- **The export replaces the current output.** The export writes to `docs/confluence/`, and `cleanup_stale` removes files there that the new export does not produce. Running it on your content removes the synthetic handbook from the working tree. Use a branch or a fresh clone.
-- **Only a page tree is exported.** `run_export.py` runs `cme pages-with-descendants`. To export a whole space, change that command in `scripts/run_export.py` to the exporter's space mode. Check the [exporter documentation](https://spenhouet.com/confluence-markdown-exporter/) for the current subcommands.
-- **The reports are for the seeded content.** `reports/fidelity-matrix.md` and `reports/remediation-report.md` describe the synthetic handbook. For your content, regenerate the findings from the new export and the validator output.
+- **The export replaces the current output.** Exports write to `docs/confluence/`. `cleanup_stale` removes files that the converter previously exported and that the new run does not produce. It does not purge other files.
+- **Only a page tree is exported.** `run_export.py` runs `cme pages-with-descendants` on one root page. Whole-space export is not supported by this wrapper. Adding it would need changes to the root lookup, the converter command, and the validator.
+- **Links outside the tree may break.** Links to pages outside the exported tree can become relative links to Markdown files that are not exported, and then validation or the strict build fails. Either export those pages too, or repair the links by hand.
+- **The validator is written for the sample.** It matches Confluence titles to Markdown filenames exactly, so titles with characters that the converter sanitizes (for example `:`) can be reported as missing. It also reports attachments that no page links to. Review its output, do not treat it as a full migration audit.
+- **The reports describe the sample.** `reports/fidelity-matrix.md` and `reports/remediation-report.md` describe the seeded handbook. Neither script regenerates them. Write your own findings from the new export.
 
 ## Outputs
 
@@ -83,7 +90,7 @@ Things to know before you run it:
 |---|---|
 | `docs/confluence/<Space name>/...` | Exported Markdown. Parent pages become `README.md`, and each page keeps its hierarchy. |
 | `docs/confluence/attachments/` | Downloaded attachments, referenced by relative links. |
-| `reports/fidelity-matrix.md` | Matrix of every Confluence element with a status: **Preserved**, **Degraded**, or **Lost**. |
+| `reports/fidelity-matrix.md` | Matrix of the sampled Confluence elements, each with a status: **Preserved**, **Degraded**, **Lost**, or not tested or not applicable. |
 | `reports/remediation-report.md` | Validation results and the items that need manual work. |
 | `site/` | Built MkDocs site (generated, gitignored). |
 
@@ -115,6 +122,6 @@ For an end-to-end example of a Backstage instance that renders docs like this on
 
 ## Security
 
-Credentials are read from `~/.config/confluence-poc/.env` or environment variables and are never committed. The export writes a private, gitignored `.work/cme-config.json` with mode 600. `.env*` (except `.env.example`), `.venv/`, `.work/`, and `site/` are gitignored.
+Credentials are read from `~/.config/confluence-poc/.env` or environment variables and are never committed. The export writes a private, gitignored `.work/cme-config.json` with mode 600. Git ignores `.env` and `.env.*` (except `.env.example`), `.venv/`, `.work/`, and `site/`.
 
 See [`docs/runbook.md`](docs/runbook.md) for the detailed runbook and troubleshooting.
