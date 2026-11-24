@@ -80,7 +80,7 @@ The scripts export one page tree: a root page and all of its descendants. To use
 
 Things to know before you run it:
 
-- Exports write to `docs/confluence/`. `cleanup_stale` removes only files the converter previously exported that the new run does not produce. Files that are not converter output, such as the sample export from another site, are not removed. That is why the sample export must be deleted first.
+- Exports write to `docs/confluence/`. `cleanup_stale` removes the output of pages that were moved or deleted since a previous export. It does not remove other files, such as the sample export from another site. That is why the sample export must be deleted first.
 - **Only a page tree is exported.** `run_export.py` runs `cme pages-with-descendants` on one root page. Whole-space export is not supported by this wrapper. Adding it would need changes to the root lookup, the converter command, and the validator.
 - **Links outside the tree may break.** Links to pages outside the exported tree can become relative links to Markdown files that are not exported, and then validation or the strict build fails. Either export those pages too, or repair the links by hand.
 - **The validator is written for the sample.** It matches Confluence titles to Markdown filenames exactly, so titles with characters that the converter sanitizes (for example `:`) can be reported as missing. It also reports attachments that no page links to. Review its output, do not treat it as a full migration audit.

@@ -75,7 +75,7 @@ Expected result for the seeded handbook: 21/21 pages, 2/2 attachments, exit 0.
 .venv/bin/python scripts/validate_export.py
 ```
 
-Checks that the exported page tree matches Confluence, that every relative link matched by the validator's pattern resolves (86 links checked; in-page anchors are reported as warnings), that attachments on disk are referenced by a page, and it lists the macro placeholders. It does not compare the attachment inventory against Confluence. Exits 1 on failure.
+Checks that the exported page tree's titles match the Confluence tree, that every relative link matched by the validator's pattern resolves (86 links checked; in-page anchors are reported as warnings), that attachments on disk are referenced by a page, and it lists the macro placeholders. It does not verify hierarchy or compare the attachment inventory against Confluence. Exits 1 on failure.
 
 ## 7. Build and preview the MkDocs site
 
