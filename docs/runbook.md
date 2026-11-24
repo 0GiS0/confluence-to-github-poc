@@ -111,7 +111,7 @@ Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/ 
 | Seed returns HTTP 500 on `include` | Empty `ac:name` parameter | Use `ac:name="page"` (already fixed in `seed_confluence.py`) |
 | Export fails on the root page with OSError | Empty ancestor path yields an absolute path | Keep `{space_name}/` at the start of path templates (already set in `config/cme-settings.json`) |
 | `Root page '...' not found` | `CONFLUENCE_ROOT_PAGE_TITLE` does not match a page title in the space, or the seed has not run | Check the exact title, or run `seed_confluence.py` for the seeded handbook |
-| Validation reports a missing or extra page | Leftover files from another export in `docs/confluence/`, or titles the converter sanitizes into different filenames | Delete the old export and re-run. Pages outside the root tree in Confluence are not counted. Review the output for your content |
+| Validation reports a missing or extra page | Leftover files from another export in `docs/confluence/` (including `confluence-lock.json`), or titles the converter sanitizes into different filenames | Delete the old export contents, including `confluence-lock.json`, and re-run (section 11). Pages outside the root tree in Confluence are not counted. Review the output for your content |
 
 ## 11. Using your own Confluence content
 

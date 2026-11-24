@@ -45,7 +45,7 @@ Run these commands from the repository root in a POSIX shell (Linux, macOS, or W
 - **Seed only a dedicated test space.** `seed_confluence.py` creates pages and replaces the content of pages with the same titles. Do not run it in a space that holds real content.
 - **Name the space "Confluence Migration PoC".** The export writes under the space's display name, and the `nav` in `mkdocs.yml` expects that name. Use a different name only after you remove `nav` (see below).
 
-- **Clear the sample export first on a new site.** The repository contains an export from the original site, and a fresh clone contains it too. Delete the contents of `docs/confluence/` before step 2. Otherwise its files remain and validation reports them as unreferenced.
+- **Clear the sample export first on a new site.** The repository contains an export from the original site, and a fresh clone contains it too. Delete the contents of `docs/confluence/`, including `confluence-lock.json`, before step 2. Otherwise its files remain and validation reports them as unreferenced.
 
 ```bash
 python3 -m venv .venv
@@ -75,7 +75,7 @@ The scripts export one page tree: a root page and all of its descendants. To use
 
 1. **Set the variables.** Set `CONFLUENCE_SPACE_KEY` to your space key and `CONFLUENCE_ROOT_PAGE_TITLE` to the exact title of the root page. Page titles must be unique within the space.
 2. **Skip the seed.** Do not run `seed_confluence.py`. It creates the synthetic handbook.
-3. **Clear the sample export.** The repository includes an export of the seeded handbook from the original site. Run the new export in a disposable clone or a branch, and delete the existing `docs/confluence/` contents first. Otherwise the leftover files remain and validation reports them as unreferenced.
+3. **Clear the sample export.** The repository includes an export of the seeded handbook from the original site. Run the new export in a disposable clone or a branch, and delete the existing `docs/confluence/` contents, including `confluence-lock.json`, first. Otherwise the leftover files remain and validation reports them as unreferenced.
 4. **Export and validate.** Run `run_export.py` and then `validate_export.py`.
 5. **Update the site navigation.** `mkdocs.yml` has an explicit `nav:` that lists the synthetic pages. Delete the `nav:` block so MkDocs generates navigation from the files, or replace it with your own page paths. Then run `mkdocs build --strict`.
 
