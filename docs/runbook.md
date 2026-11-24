@@ -56,7 +56,7 @@ The seed deliberately uses only built-in macros, plus one unknown macro (`acme-s
 
 ## 5. Export to Markdown
 
-Before the first export on a new site, delete the sample export: the contents of `docs/confluence/`. The repository (and any clone) contains an export from the original site, and its files would otherwise be reported as unreferenced by validation.
+Before the first export on a new site, delete the sample export: the contents of `docs/confluence/`, including `confluence-lock.json`. The repository (and any clone) contains an export from the original site, and its files would otherwise be reported as unreferenced by validation.
 
 ```bash
 .venv/bin/python scripts/run_export.py
@@ -100,7 +100,7 @@ Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/ 
 ## 9. Maintenance notes
 
 - `mkdocs.yml` uses an explicit `nav`. Pages that are not listed in `nav` are still built and served, but they do not appear in the sidebar. For your own content, remove the `nav` block so MkDocs generates it.
-- The export is a full re-export (`skip_unchanged` is false). `cleanup_stale` is not a reliable way to remove the sample export, so delete it manually first (section 11).
+- The export is a full re-export (`skip_unchanged` is false). `cleanup_stale` is not a reliable way to remove the sample export. Delete the `docs/confluence/` contents, including `confluence-lock.json`, first (section 11).
 - Remediation items and the fidelity matrix are in `reports/`. They describe the seeded handbook.
 
 ## 10. Troubleshooting
@@ -117,7 +117,7 @@ Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/ 
 
 1. Set `CONFLUENCE_SPACE_KEY` to your space key and `CONFLUENCE_ROOT_PAGE_TITLE` to the exact title of the root page. Titles must be unique in the space.
 2. Do not run `seed_confluence.py`.
-3. Delete the existing `docs/confluence/` contents (the sample export from the original site) in a disposable clone or branch. Otherwise its leftover files are reported as unreferenced.
+3. Delete the existing `docs/confluence/` contents, including `confluence-lock.json` (the sample export from the original site), in a disposable clone or branch. Otherwise its leftover files are reported as unreferenced.
 4. Run `run_export.py` and then `validate_export.py`.
 5. Delete the `nav` block in `mkdocs.yml` (or replace it with your page paths), then run `mkdocs build --strict`.
 
