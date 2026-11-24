@@ -100,7 +100,7 @@ Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/ 
 ## 9. Maintenance notes
 
 - `mkdocs.yml` uses an explicit `nav`. Pages that are not listed in `nav` are still built and served, but they do not appear in the sidebar. For your own content, remove the `nav` block so MkDocs generates it.
-- The export is a full re-export (`skip_unchanged` is false). `cleanup_stale` removes the output of pages that were moved or deleted since a previous export. It does not remove other files in `docs/confluence/`.
+- The export is a full re-export (`skip_unchanged` is false). Cleanup is lockfile-based: `cleanup_stale` removes Markdown and sidecar files that the converter recorded for a page whose export path changed or that was deleted. It does not remove files it never exported.
 - Remediation items and the fidelity matrix are in `reports/`. They describe the seeded handbook.
 
 ## 10. Troubleshooting
@@ -123,7 +123,7 @@ Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/ 
 
 Notes:
 
-- Exports write to `docs/confluence/`. `cleanup_stale` removes only files the converter previously exported that the new run does not produce.
+- Exports write to `docs/confluence/`. Cleanup is lockfile-based and only covers files the converter recorded. Files it never exported, such as the sample export from another site, remain. Database placeholders are disabled in `config/cme-settings.json` (`database_placeholders: false`) so the page count matches the validator.
 - `run_export.py` exports a single page tree. Whole-space export is not supported by this wrapper. It would need changes to the root lookup, the converter command, and the validator.
 - Links to pages outside the exported tree can become relative links to Markdown files that are not exported. Then validation or the strict build fails. Export those pages too, or repair the links.
 - The validator matches Confluence titles to Markdown filenames exactly. Titles with characters the converter sanitizes can be reported as missing. It also reports attachments that no page links to. Review its output rather than treating it as a full audit.

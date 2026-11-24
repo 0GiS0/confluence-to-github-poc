@@ -45,6 +45,8 @@ Run these commands from the repository root in a POSIX shell (Linux, macOS, or W
 - **Seed only a dedicated test space.** `seed_confluence.py` creates pages and replaces the content of pages with the same titles. Do not run it in a space that holds real content.
 - **Name the space "Confluence Migration PoC".** The export writes under the space's display name, and the `nav` in `mkdocs.yml` expects that name. Use a different name only after you remove `nav` (see below).
 
+- **Clear the sample export first on a new site.** The repository contains an export from the original site, and a fresh clone contains it too. Delete the contents of `docs/confluence/` before step 2. Otherwise its files remain and validation reports them as unreferenced.
+
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
@@ -55,7 +57,6 @@ python3 -m venv .venv
 .venv/bin/mkdocs serve -a 127.0.0.1:8000         # 5. preview the site
 ```
 
-- **Clear the sample export first on a new site.** The repository contains an export from the original site, and a fresh clone contains it too. Before step 2, delete the contents of `docs/confluence/`. Otherwise its files remain and validation reports them as unreferenced.
 - **Preview URL.** With the seeded space name, open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/. The site has no root page, so use this path or the **Home** entry in the sidebar. With a different space name, use the exported space folder under `docs/confluence/` in the same URL form.
 
 Step 3 needs Confluence access. Steps 4 and 5 work offline.
@@ -80,7 +81,7 @@ The scripts export one page tree: a root page and all of its descendants. To use
 
 Things to know before you run it:
 
-- Exports write to `docs/confluence/`. `cleanup_stale` removes the output of pages that were moved or deleted since a previous export. It does not remove other files, such as the sample export from another site. That is why the sample export must be deleted first.
+- Exports write to `docs/confluence/`. Cleanup is lockfile-based: `cleanup_stale` removes Markdown and sidecar files that the converter recorded for a page whose export path changed or that was deleted. It does not remove files it never exported, such as the sample export from another site. That is why the sample export must be deleted first. Database placeholders are disabled in `config/cme-settings.json` so the page count matches the validator.
 - **Only a page tree is exported.** `run_export.py` runs `cme pages-with-descendants` on one root page. Whole-space export is not supported by this wrapper. Adding it would need changes to the root lookup, the converter command, and the validator.
 - **Links outside the tree may break.** Links to pages outside the exported tree can become relative links to Markdown files that are not exported, and then validation or the strict build fails. Either export those pages too, or repair the links by hand.
 - **The validator is written for the sample.** It matches Confluence titles to Markdown filenames exactly, so titles with characters that the converter sanitizes (for example `:`) can be reported as missing. It also reports attachments that no page links to. Review its output, do not treat it as a full migration audit.
