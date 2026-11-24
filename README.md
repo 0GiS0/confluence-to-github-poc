@@ -42,6 +42,9 @@ The scripts read `~/.config/confluence-poc/.env`. Only non-empty environment var
 
 Run these commands from the repository root in a POSIX shell (Linux, macOS, or WSL on Windows).
 
+- **Seed only a dedicated test space.** `seed_confluence.py` creates pages and replaces the content of pages with the same titles. Do not run it in a space that holds real content.
+- **Name the space "Confluence Migration PoC".** The export writes under the space's display name, and the `nav` in `mkdocs.yml` expects that name. Use a different name only after you remove `nav` (see below).
+
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
@@ -52,8 +55,7 @@ python3 -m venv .venv
 .venv/bin/mkdocs serve -a 127.0.0.1:8000         # 5. preview the site
 ```
 
-- **Seed only a dedicated test space.** `seed_confluence.py` creates pages and replaces the content of pages with the same titles. Do not run it in a space that holds real content.
-- **Name the space "Confluence Migration PoC".** The export writes under the space's display name, and the `nav` in `mkdocs.yml` expects that name. Use a different name only after you remove `nav` (see below).
+- **Clear the sample export first on a new site.** The repository contains an export from the original site. Before step 2, delete the contents of `docs/confluence/` (or work in a fresh clone). Otherwise its files remain and validation reports them as unreferenced.
 - **Preview URL.** Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/. The site has no root page, so use this path or the **Home** entry in the sidebar.
 
 Step 3 needs Confluence access. Steps 4 and 5 work offline.
@@ -72,13 +74,13 @@ The scripts export one page tree: a root page and all of its descendants. To use
 
 1. **Set the variables.** Set `CONFLUENCE_SPACE_KEY` to your space key and `CONFLUENCE_ROOT_PAGE_TITLE` to the exact title of the root page. Page titles must be unique within the space.
 2. **Skip the seed.** Do not run `seed_confluence.py`. It creates the synthetic handbook.
-3. **Clear the sample export.** The repository includes an export of the seeded handbook. Run the new export in a disposable clone or a branch. Export does not purge files that the new tree no longer produces, so delete the existing `docs/confluence/` contents first.
+3. **Clear the sample export.** The repository includes an export of the seeded handbook from the original site. Run the new export in a disposable clone or a branch, and delete the existing `docs/confluence/` contents first. Otherwise the leftover files remain and validation reports them as unreferenced.
 4. **Export and validate.** Run `run_export.py` and then `validate_export.py`.
 5. **Update the site navigation.** `mkdocs.yml` has an explicit `nav:` that lists the synthetic pages. Delete the `nav:` block so MkDocs generates navigation from the files, or replace it with your own page paths. Then run `mkdocs build --strict`.
 
 Things to know before you run it:
 
-- **The export replaces the current output.** Exports write to `docs/confluence/`. `cleanup_stale` removes files that the converter previously exported and that the new run does not produce. It does not purge other files.
+- Exports write to `docs/confluence/`. `cleanup_stale` removes only files the converter previously exported that the new run does not produce. Files that are not converter output, such as the sample export from another site, are not removed. That is why the sample export must be deleted first.
 - **Only a page tree is exported.** `run_export.py` runs `cme pages-with-descendants` on one root page. Whole-space export is not supported by this wrapper. Adding it would need changes to the root lookup, the converter command, and the validator.
 - **Links outside the tree may break.** Links to pages outside the exported tree can become relative links to Markdown files that are not exported, and then validation or the strict build fails. Either export those pages too, or repair the links by hand.
 - **The validator is written for the sample.** It matches Confluence titles to Markdown filenames exactly, so titles with characters that the converter sanitizes (for example `:`) can be reported as missing. It also reports attachments that no page links to. Review its output, do not treat it as a full migration audit.
@@ -96,7 +98,7 @@ Things to know before you run it:
 
 ### Reading the reports
 
-- **`reports/fidelity-matrix.md`** answers "what survives the migration?". Each row is a Confluence element, such as headings, tables, macros, or links. **Preserved** means it is readable with no work. **Degraded** means the content is there, but a behavior or link does not match the source, so a fix is recommended. **Lost** means it is replaced by a placeholder and must be rewritten by hand.
+- **`reports/fidelity-matrix.md`** answers "what survives the migration?". Each row is a Confluence element, such as headings, tables, macros, or links. **Preserved** means it is readable with no work. **Degraded** means the content is there, but a behavior or link does not match the source, so a fix is recommended. **Lost** means the content is replaced by a placeholder or omitted by design, so a manual rewrite may be needed.
 - **`reports/remediation-report.md`** answers "what do I need to fix?". It lists the validation results, then the manual items with the pages and reasons, and notes on the export process.
 
 ## Backstage TechDocs

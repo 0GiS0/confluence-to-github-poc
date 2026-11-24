@@ -44,11 +44,13 @@ Pinned versions: `confluence-markdown-exporter==5.6.0` (CLI `cme`), `mkdocs==1.6
 
 ## 4. Seed the Confluence space (idempotent)
 
+> **Warning:** Run the seed only in a dedicated test space. It replaces the content of existing pages whose titles match the synthetic handbook. Name the space "Confluence Migration PoC", because the `nav` in `mkdocs.yml` expects that display name.
+
 ```bash
 .venv/bin/python scripts/seed_confluence.py
 ```
 
-Creates or updates 21 pages under the "Engineering Handbook" root, with attachments. Run it only in a dedicated test space: it replaces the content of pages whose titles match. Name the space "Confluence Migration PoC", because the `nav` in `mkdocs.yml` expects that display name. Re-running is safe: no duplicate pages are created. Because Confluence normalises stored XHTML, most pages receive a new version on every run even when the content is unchanged.
+Creates or updates 21 pages under the "Engineering Handbook" root, with attachments. Re-running is safe: no duplicate pages are created. Because Confluence normalises stored XHTML, most pages receive a new version on every run even when the content is unchanged.
 
 The seed deliberately uses only built-in macros, plus one unknown macro (`acme-status-widget`) and an `include` macro, to test degradation.
 
@@ -71,7 +73,7 @@ Expected result for the seeded handbook: 21/21 pages, 2/2 attachments, exit 0.
 .venv/bin/python scripts/validate_export.py
 ```
 
-Checks that the exported page tree matches Confluence, that every relative link resolves (86 links checked; in-page anchors are reported as warnings), that attachments are on disk, and it lists the macro placeholders. Exits 1 on failure.
+Checks that the exported page tree matches Confluence, that every relative link matched by the validator's pattern resolves (86 links checked; in-page anchors are reported as warnings), that attachments on disk are referenced by a page, and it lists the macro placeholders. It does not compare the attachment inventory against Confluence. Exits 1 on failure.
 
 ## 7. Build and preview the MkDocs site
 
@@ -95,8 +97,8 @@ Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/ 
 
 ## 9. Maintenance notes
 
-- `mkdocs.yml` uses an explicit `nav`. A page added to the export does not appear in the site until it is added to `nav`. For your own content, remove the `nav` block so MkDocs generates it.
-- The export is a full re-export (`skip_unchanged` is false). Stale files are removed (`cleanup_stale` is true), so exporting replaces the current contents of `docs/confluence/`.
+- `mkdocs.yml` uses an explicit `nav`. Pages that are not listed in `nav` are still built and served, but they do not appear in the sidebar. For your own content, remove the `nav` block so MkDocs generates it.
+- The export is a full re-export (`skip_unchanged` is false). `cleanup_stale` removes files the converter previously exported that the new run does not produce. It does not remove other files in `docs/confluence/`.
 - Remediation items and the fidelity matrix are in `reports/`. They describe the seeded handbook.
 
 ## 10. Troubleshooting
@@ -107,13 +109,13 @@ Open http://127.0.0.1:8000/Confluence%20Migration%20PoC/Engineering%20Handbook/ 
 | Seed returns HTTP 500 on `include` | Empty `ac:name` parameter | Use `ac:name="page"` (already fixed in `seed_confluence.py`) |
 | Export fails on the root page with OSError | Empty ancestor path yields an absolute path | Keep `{space_name}/` at the start of path templates (already set in `config/cme-settings.json`) |
 | `Root page '...' not found` | `CONFLUENCE_ROOT_PAGE_TITLE` does not match a page title in the space, or the seed has not run | Check the exact title, or run `seed_confluence.py` for the seeded handbook |
-| Validation reports a missing or extra page | Space has pages outside the handbook tree, or titles with characters the converter sanitizes | Validation is scoped to the root page's descendants and matches exact filenames; pages outside the tree are not validation errors. Review the output for your content |
+| Validation reports a missing or extra page | Leftover files from another export in `docs/confluence/`, or titles the converter sanitizes into different filenames | Delete the old export and re-run. Pages outside the root tree in Confluence are not counted. Review the output for your content |
 
 ## 11. Using your own Confluence content
 
 1. Set `CONFLUENCE_SPACE_KEY` to your space key and `CONFLUENCE_ROOT_PAGE_TITLE` to the exact title of the root page. Titles must be unique in the space.
 2. Do not run `seed_confluence.py`.
-3. Delete the existing `docs/confluence/` contents (the sample export) in a disposable clone or branch. Export does not purge files the new tree no longer produces.
+3. Delete the existing `docs/confluence/` contents (the sample export from the original site) in a disposable clone or branch. Otherwise its leftover files are reported as unreferenced.
 4. Run `run_export.py` and then `validate_export.py`.
 5. Delete the `nav` block in `mkdocs.yml` (or replace it with your page paths), then run `mkdocs build --strict`.
 

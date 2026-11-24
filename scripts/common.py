@@ -31,7 +31,10 @@ def load_settings(env_file: Path = DEFAULT_ENV_FILE) -> dict:
             if not line or line.startswith("#") or "=" not in line:
                 continue
             key, _, value = line.partition("=")
-            values[key.strip()] = value.strip().strip('"').strip("'")
+            value = value.strip()
+            if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+                value = value[1:-1]
+            values[key.strip()] = value
     for key in (*REQUIRED_VARS, "CONFLUENCE_ROOT_PAGE_TITLE"):
         if os.environ.get(key):
             values[key] = os.environ[key]
